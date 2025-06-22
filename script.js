@@ -299,29 +299,34 @@ class PortfolioEnhancer {
         
         if (form) {
             form.addEventListener('submit', (e) => {
-                e.preventDefault();
-                
-                const submitBtn = form.querySelector('.submit-btn');
-                const btnText = submitBtn.querySelector('.btn-text');
-                const btnLoading = submitBtn.querySelector('.btn-loading');
-                
-                // Show loading state
-                submitBtn.classList.add('loading');
-                submitBtn.disabled = true;
-                
-                // Simulate form submission
-                setTimeout(() => {
-                    // Reset form
-                    form.reset();
-                    
-                    // Show success message
-                    this.showNotification('Message sent successfully!', 'success');
-                    
-                    // Reset button state
-                    submitBtn.classList.remove('loading');
-                    submitBtn.disabled = false;
-                }, 2000);
-            });
+    e.preventDefault();
+
+    const submitBtn = form.querySelector('.submit-btn');
+    submitBtn.classList.add('loading');
+    submitBtn.disabled = true;
+
+    const parms = {
+        firstname: document.getElementById("firstname").value,
+        lastname: document.getElementById("lastname").value,
+        email: document.getElementById("email").value,
+        phone: document.getElementById("phone").value,
+        topic: document.getElementById("topic").value,
+        message: document.getElementById("message").value
+    };
+
+    emailjs.send("service_qsji0ps", "template_2vx0xx9", parms)
+        .then(() => {
+            form.reset();
+            this.showNotification('Message sent successfully!', 'success');
+        })
+        .catch(() => {
+            this.showNotification('Failed to send message. Please try again.', 'error');
+        })
+        .finally(() => {
+            submitBtn.classList.remove('loading');
+            submitBtn.disabled = false;
+        });
+    });
 
             // Form validation
             const inputs = form.querySelectorAll('input, textarea, select');
